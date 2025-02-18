@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>tn.esprit</groupId>
-	<artifactId>mouadhfersi-4TWIN4-G1-Tpfoyer</artifactId>
+	<artifactId>mouadhfersi-4twin4-g1-tpfoyer</artifactId>
 	<version>3.0.0</version>
 	<name>foyer</name>
 	<description>foyer</description>
