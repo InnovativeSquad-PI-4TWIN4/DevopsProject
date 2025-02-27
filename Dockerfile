@@ -5,6 +5,9 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
+# Vérifiez si le fichier JAR est bien généré
+RUN ls -l /app/target
+
 FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
