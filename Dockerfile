@@ -1,5 +1,16 @@
-FROM maven:3.8.4-openjdk-17
-WORKDIR /foyer
-EXPOSE 8083
-ADD target/foyer-3.0.0.jar foyer-3.0.0.jar
-ENTRYPOINT ["java","-jar","/foyer-3.0.0.jar"]
+FROM maven:3.9.4-eclipse-temurin-17 AS build
+
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+FROM openjdk:17-jdk-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/target/SpringProject-1.0.0.jar app.jar
+
+EXPOSE 8089
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
