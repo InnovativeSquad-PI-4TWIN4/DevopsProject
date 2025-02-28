@@ -73,39 +73,39 @@
 	</dependencies>
 
 	<!-- Configuration pour Nexus -->
-<!--	<repositories>-->
-<!--		<repository>-->
-<!--			<id>nexus-releases</id>-->
-<!--			<url>http://172.29.1.119:8081/repository/maven-releases/</url>-->
-<!--			<releases>-->
-<!--				<enabled>true</enabled>-->
-<!--			</releases>-->
-<!--			<snapshots>-->
-<!--				<enabled>false</enabled>-->
-<!--			</snapshots>-->
-<!--		</repository>-->
-<!--		<repository>-->
-<!--			<id>nexus-snapshots</id>-->
-<!--			<url>http://172.29.1.119:8081/repository/maven-snapshots/</url>-->
-<!--			<releases>-->
-<!--				<enabled>false</enabled>-->
-<!--			</releases>-->
-<!--			<snapshots>-->
-<!--				<enabled>true</enabled>-->
-<!--			</snapshots>-->
-<!--		</repository>-->
-<!--	</repositories>-->
+	<repositories>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://172.29.1.119:8081/repository/maven-releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>nexus-snapshots</id>
+			<url>http://172.29.1.119:8081/repository/maven-snapshots/</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
-<!--	<distributionManagement>-->
-<!--		<repository>-->
-<!--			<id>deploymentRepo</id>-->
-<!--			<url>http://172.29.1.119:8081/repository/maven-releases/</url>-->
-<!--		</repository>-->
-<!--		<snapshotRepository>-->
-<!--			<id>deploymentRepo</id>-->
-<!--			<url>http://172.29.1.119:8081/repository/maven-snapshots/</url>-->
-<!--		</snapshotRepository>-->
-<!--	</distributionManagement>-->
+	<distributionManagement>
+		<repository>
+			<id>deploymentRepo</id>
+			<url>http://172.29.1.119:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>deploymentRepo</id>
+			<url>http://172.29.1.119:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<build>
 		<plugins>
