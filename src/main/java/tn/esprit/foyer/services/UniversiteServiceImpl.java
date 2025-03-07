@@ -1,7 +1,7 @@
 package tn.esprit.foyer.services;
 
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tn.esprit.foyer.entities.Foyer;
 import tn.esprit.foyer.entities.Universite;
@@ -10,14 +10,21 @@ import tn.esprit.foyer.repository.UniversiteRepository;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
-@Slf4j
-public class UniversiteServiceImpl implements IUniversiteService{
-    UniversiteRepository universiteRepository;
-    FoyerRepository foyerRepository;
+public class UniversiteServiceImpl implements IUniversiteService {
+    private final UniversiteRepository universiteRepository;
+    private final FoyerRepository foyerRepository;
+    private final Logger log;
+
+    // 🔹 Constructeur modifié pour accepter un Logger injecté
+    public UniversiteServiceImpl(UniversiteRepository universiteRepository, FoyerRepository foyerRepository, Logger log) {
+        this.universiteRepository = universiteRepository;
+        this.foyerRepository = foyerRepository;
+        this.log = log;  // Utilisation du Logger injecté
+    }
+
     @Override
     public List<Universite> retrieveAllUniversites() {
-        log.info("debut methode retrieveAllUniversites");
+        log.info("Début méthode retrieveAllUniversites");
         return universiteRepository.findAll();
     }
 
@@ -28,8 +35,7 @@ public class UniversiteServiceImpl implements IUniversiteService{
 
     @Override
     public Universite updateUniversite(Universite u) {
-
-        log.info("debut methode updateUniversite");
+        log.info("Début méthode updateUniversite");
         return universiteRepository.save(u);
     }
 
@@ -45,35 +51,19 @@ public class UniversiteServiceImpl implements IUniversiteService{
 
     @Override
     public Universite affecterFoyerAUniversite(long idFoyer, String nomUniversite) {
-        // récupérer les objets à partir des primitifs
-        Foyer f = foyerRepository.findById(idFoyer).get();
+        Foyer f = foyerRepository.findById(idFoyer).orElseThrow(() -> new RuntimeException("Foyer non trouvé"));
         Universite universite = universiteRepository.findByNomUniversite(nomUniversite);
-       // identifier le parent du child
-        // parent.setChild()
         f.setUniversite(universite);
-        // sauvegarde l'objet modifié
         foyerRepository.save(f);
-        log.info("fin methode affecterFoyerAUniversite");
+        log.info("Fin méthode affecterFoyerAUniversite");
         return universite;
     }
 
     @Override
     public Long desaffecterFoyerAUniversite(long idFoyer) {
-        // t1 = recuperer le temps (date sys)
-        Foyer f = foyerRepository.findById(idFoyer).get();
+        Foyer f = foyerRepository.findById(idFoyer).orElseThrow(() -> new RuntimeException("Foyer non trouvé"));
         f.setUniversite(null);
-        //
         foyerRepository.save(f);
-        // t2 = recuperer le temps (date sys)
-        // te= t2-t1
-
         return f.getIdFoyer();
     }
-
-
-
-
-
-
-
 }
