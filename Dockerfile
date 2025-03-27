@@ -5,15 +5,15 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Vérification du contenu du répertoire target pour le nom du fichier JAR
+# Print the contents of the target directory to verify the JAR name
 RUN ls -l /app/target
 
 FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
-# Utilisation du bon nom de fichier JAR
-COPY --from=build /app/target/firas090-4twin4-g1-tpfoyer-3.0.0.jar app.jar
+# Use the correct JAR name for your project
+COPY --from=build /app/target/ChaiebDhia_4twin4_InnovativeSquad.jar app.jar
 
 EXPOSE 8089
 
