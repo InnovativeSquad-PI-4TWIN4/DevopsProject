@@ -132,5 +132,13 @@
 			</plugin>
 		</plugins>
 	</build>
+	<!-- Add this right before </project> -->
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<url>http://localhost:8081/repository/devops/</url>
+		</repository>
+	</distributionManagement>
+
 
 </project>
