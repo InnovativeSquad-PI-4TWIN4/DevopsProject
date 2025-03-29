@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<sonar.projectKey>devops</sonar.projectKey>
-		<sonar.projectName>YourDesiredName</sonar.projectName>
+		<sonar.projectName>ChaiebDhia-4twin4-InnovativeSquad-tpfoyer</sonar.projectName>
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
 		<sonar.login>${SONAR_TOKEN}</sonar.login>
 	</properties>
