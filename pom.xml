@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<sonar.projectKey>devops</sonar.projectKey>
+		<sonar.projectName>YourDesiredName</sonar.projectName>
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
 		<sonar.login>${SONAR_TOKEN}</sonar.login>
 	</properties>
