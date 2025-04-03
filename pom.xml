@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>tn.esprit</groupId>
-<artifactId>firas-4twin4-g1-tpfoyer</artifactId>
+	<artifactId>firas-4twin4-g1-tpfoyer</artifactId>
 	<version>3.0.0</version>
 	<name>foyer</name>
 	<description>foyer</description>
@@ -122,6 +122,17 @@
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>3.9.1.2184</version>
+			</plugin>
+			<!-- Configuration pour JUnit -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+					</includes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
