@@ -16,8 +16,8 @@
 	<properties>
 		<java.version>17</java.version>
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
-		<sonar.login>admin</sonar.login>
-		<sonar.password>admin</sonar.password>
+		<!-- Supprimé les propriétés login/password et remplacé par token -->
+		<!-- Ne pas mettre le token directement ici, il sera fourni par Jenkins -->
 	</properties>
 	
 	<!-- Configuration pour Nexus -->
@@ -137,4 +137,3 @@
 		</plugins>
 	</build>
 </project>
-
