@@ -19,6 +19,17 @@
 		<!-- Supprimé les propriétés login/password et remplacé par token -->
 		<!-- Ne pas mettre le token directement ici, il sera fourni par Jenkins -->
 	</properties>
+	<!-- Configuration pour Nexus -->
+	<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://localhost:8081/repository/maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://localhost:8081/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
