@@ -1,48 +1,62 @@
 version: '3.8'
 
 services:
-  backend:
-    image: firas090/devopsrepository:latest # Correct backend repository
-    ports:
-      - "8089:8089"
-    depends_on:
-      mysql:
-        condition: service_healthy
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/foyer_db?createDatabaseIfNotExist=true
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=""
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    networks:
-      - app-network
-
-  frontend:
-    image: firas090/devopsrepository-frontend:latest # Replace with your actual frontend repository
-    ports:
-      - "4200:80"
-    networks:
-      - app-network
-
-  mysql:
+  db:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=""
-      - MYSQL_DATABASE=foyer_db
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      MYSQL_ROOT_PASSWORD: ""
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: foyer_db
     ports:
       - "3306:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "-u", "root", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
       - app-network
-volumes:
-  mysql-data:
+
+  backend:
+    image: firas090/devopsrepository:latest
+    ports:
+      - "8089:8089"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/foyer_db?createDatabaseIfNotExist=true"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  frontend:
+    image: firas090/devopsrepository-frontend:latest
+    ports:
+      - "4200:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  db_data:
