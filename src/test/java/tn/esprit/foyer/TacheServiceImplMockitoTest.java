@@ -1,4 +1,4 @@
-package tn.esprit.foyer.test;
+package tn.esprit.foyer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class TacheTestMockito {
+public class TacheServiceImplMockitoTest {
 
     @Mock   //Permet de créer un mock (simulation) d'une dépendance.
     private TacheRepository tacheRepository;
