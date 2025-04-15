@@ -6,7 +6,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Getter
 @Setter
@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 @RequiredArgsConstructor
+
 public class Etudiant implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,15 +37,17 @@ public class Etudiant implements Serializable {
 
 
     @OneToMany(mappedBy = "etudiant")
+    @JsonIgnore
     List<Tache> taches;
     Float montantInscription;
     @Enumerated(EnumType.STRING)
     TypeEtudiant typeEtudiant;
-
+    @JsonIgnore
     @ManyToMany(mappedBy = "etudiants",fetch = FetchType.EAGER)
     List<Reservation> reservations;
 
     @OneToOne
+    @JsonIgnore
     Tache tache;
     public Etudiant(String nomEt, String prenomEt, String ecole) {
         this.nomEt = nomEt;
