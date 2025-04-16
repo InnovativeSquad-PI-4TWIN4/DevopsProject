@@ -42,6 +42,7 @@ public class ReservationServiceImplTest {
     private Reservation reservation;
 
     @BeforeEach
+    
     public void setUp() {
         // Initialisation des objets de test
         etudiant = new Etudiant();
@@ -57,14 +58,18 @@ public class ReservationServiceImplTest {
         reservation = new Reservation();
         reservation.setIdReservation("1011234512023"); // Exemple d'ID basé sur la chambre et l'étudiant
         reservation.setEstValid(true);
-        reservation.setEtudiants(List.of(etudiant)); // Ajouter l'étudiant à la réservation
+
+        // ✅ Ne pas ajouter d'étudiant ici → sinon tu te retrouves avec 2 étudiants
+        reservation.setEtudiants(new ArrayList<>()); // Liste vide, le service va y ajouter l'étudiant
     }
+
 
     @Test
     public void testAjouterReservationEtAssignerAChambreEtAEtudiant() {
-        // Comportement simulé des méthodes
+        // Simuler une chambre vide : aucune réservation pour cette chambre
         when(etudiantRepository.findByCin(12345L)).thenReturn(etudiant);
         when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre);
+        when(reservationRepository.getReservationsCurrentYear(any(), any(), eq(101L))).thenReturn(0); // chambre vide
         when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
 
         // Appel de la méthode à tester
@@ -72,9 +77,10 @@ public class ReservationServiceImplTest {
 
         // Vérification des interactions et des résultats
         assertNotNull(result);
-        assertTrue(result.getEtudiants().contains(etudiant)); // Vérifier si l'étudiant a été assigné à la réservation
-        verify(reservationRepository, times(1)).save(any(Reservation.class)); // Vérifier que la méthode save a été appelée une fois
-        verify(chambreRepository, times(1)).save(chambre); // Vérifier que la méthode save de chambre a été appelée une fois
+        assertEquals(1, result.getEtudiants().size());
+        assertTrue(result.getEtudiants().contains(etudiant));
+        verify(reservationRepository, times(1)).save(any(Reservation.class));
+        verify(chambreRepository, times(1)).save(chambre);
     }
 
     @Test
