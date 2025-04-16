@@ -1,24 +1,30 @@
-global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
-  scrape_timeout: 10s  # Added timeout
-
-scrape_configs:
-  # Jenkins metrics (running on Windows host)
-  - job_name: 'jenkins'
-    metrics_path: '/prometheus'
-    static_configs:
-      - targets: ['10.255.255.254:8080']  # Works in WSL2
-        labels:
-          service: 'jenkins'
-    # Added connection settings for reliability
-    scheme: http
-    tls_config:
-      insecure_skip_verify: true
-
-  # Prometheus self-monitoring (in-container)
-  - job_name: 'prometheus'
-    static_configs:
-      - targets: ['prometheus:9090']  # Using service name
-        labels:
-          service: 'prometheus'
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 15s
+    scrape_timeout: 10s  # Added timeout
+  
+  scrape_configs:
+    # Jenkins metrics (running on Windows host)
+    - job_name: 'jenkins'
+      metrics_path: '/prometheus'
+      static_configs:
+        - targets: ['10.255.255.254:8080']  # Works in WSL2
+          labels:
+            service: 'jenkins'
+      # Added connection settings for reliability
+      scheme: http
+      tls_config:
+        insecure_skip_verify: true
+  
+    # Prometheus self-monitoring (in-container)
+    - job_name: 'prometheus'
+      static_configs:
+        - targets: ['prometheus:9090']  # Using service name
+          labels:
+            service: 'prometheus'
+  
+  
+    - job_name: 'spring-app'
+      metrics_path: '/foyer/actuator/prometheus'
+      static_configs:
+        - targets: [ 'spring-app:8089' ]
