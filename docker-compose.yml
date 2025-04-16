@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0
@@ -15,7 +13,8 @@ services:
       test: ["CMD", "mysqladmin", "-u", "root", "ping"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
     networks:
       - app-network
 
@@ -35,7 +34,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8089/actuator/health"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 30s
     networks:
       - app-network
 
@@ -50,7 +50,8 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 10s
     networks:
       - app-network
 
