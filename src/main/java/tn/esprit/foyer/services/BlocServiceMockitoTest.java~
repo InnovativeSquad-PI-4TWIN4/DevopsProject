@@ -1,0 +1,62 @@
+package tn.esprit.foyer.services;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import tn.esprit.foyer.entities.Bloc;
+import tn.esprit.foyer.entities.Chambre;
+import tn.esprit.foyer.repository.BlocRepository;
+import tn.esprit.foyer.repository.ChambreRepository;
+
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class BlocServiceMockitoTest {
+
+    @Mock
+    private BlocRepository blocRepository;
+
+    @Mock
+    private ChambreRepository chambreRepository;
+
+    @InjectMocks
+    private BlocServiceImpl blocService;
+
+    @BeforeEach
+    public void setUp() {
+        // Initialise les mocks
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void testAffecterChambresABloc() {
+        // Arrange
+        Bloc bloc = new Bloc();
+        bloc.setIdBloc(1L);
+        bloc.setNomBloc("Bloc C");
+
+        Chambre chambre1 = new Chambre();
+        chambre1.setNumeroChambre(101L);
+
+        Chambre chambre2 = new Chambre();
+        chambre2.setNumeroChambre(102L);
+
+        // Simuler le comportement des repositories
+        when(blocRepository.findByNomBloc("Bloc C")).thenReturn(bloc);
+        when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre1);
+        when(chambreRepository.findByNumeroChambre(102L)).thenReturn(chambre2);
+
+        // Act
+        Bloc updatedBloc = blocService.affecterChambresABloc(List.of(101L, 102L), "Bloc C");
+
+        // Assert
+        assertNotNull(updatedBloc, "Le bloc ne devrait pas être null");
+        assertEquals(2, updatedBloc.getChambres().size(), "Le bloc devrait avoir 2 chambres");
+        assertEquals(101L, updatedBloc.getChambres().get(0).getNumeroChambre(), "La première chambre ne correspond pas");
+        assertEquals(102L, updatedBloc.getChambres().get(1).getNumeroChambre(), "La deuxième chambre ne correspond pas");
+    }
+}

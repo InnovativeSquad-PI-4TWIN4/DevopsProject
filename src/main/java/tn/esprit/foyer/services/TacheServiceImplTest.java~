@@ -1,0 +1,70 @@
+package tn.esprit.foyer.services;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import tn.esprit.foyer.entities.Etudiant;
+import tn.esprit.foyer.entities.Tache;
+import tn.esprit.foyer.repository.EtudiantRepository;
+import tn.esprit.foyer.repository.TacheRepository;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+@ExtendWith(MockitoExtension.class)
+public class TacheServiceImplTest {
+
+    @Mock
+    private EtudiantRepository etudiantRepository;
+
+    @Mock
+    private TacheRepository tacheRepository;
+
+    @InjectMocks
+    private TacheServiceImpl tacheService;
+
+    private Etudiant etudiant;
+    private Tache tache;
+
+    @BeforeEach
+    public void setUp() {
+        // Initialisation des objets de test
+        etudiant = new Etudiant();
+        etudiant.setIdEtudiant(1L);
+        etudiant.setNomEt("Test");
+        etudiant.setPrenomEt("Etudiant");
+        etudiant.setMontantInscription(1000f);
+
+        tache = new Tache();
+        tache.setIdTache(1L);
+        tache.setDateTache(LocalDate.now());
+        tache.setDuree(5);
+        tache.setTarifHoraire(20f);
+        tache.setTypeTache(TypeTache.SUPPORT); // Assurez-vous d'avoir l'énumération correspondante
+
+        // Préparer les mocks
+        when(etudiantRepository.findAll()).thenReturn(List.of(etudiant));
+        when(tacheRepository.sommeTacheAnneeEncours(any(LocalDate.class), any(LocalDate.class), eq(etudiant.getIdEtudiant())))
+                .thenReturn(100f); // Somme des tâches assignées pour cet étudiant
+    }
+
+    @Test
+    public void testCalculNouveauMontantInscriptionDesEtudiants() {
+        // Appel de la méthode à tester
+        HashMap<String, Float> result = tacheService.calculNouveauMontantInscriptionDesEtudiants();
+
+        // Vérification des résultats
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.containsKey("Test Etudiant"));
+        assertEquals(900f, result.get("Test Etudiant"), 0.01);
+    }
+}

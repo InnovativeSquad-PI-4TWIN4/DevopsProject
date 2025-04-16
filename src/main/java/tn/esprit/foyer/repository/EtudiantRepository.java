@@ -12,22 +12,6 @@ import tn.esprit.foyer.entities.Etudiant;
 public interface EtudiantRepository extends JpaRepository<Etudiant,Long> {
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 Etudiant findByCin(Long idEtudiant);
 Etudiant findByNomEtAndPrenomEt(String nomEt, String prenomEt);
 //@Query(value = "select * from  reservation_etudiants re where re.etudiants_id_etudiant=:idEtudiant", nativeQuery = true)

@@ -105,7 +105,7 @@ public class ReservationServicImpl implements IReservationService {
                         return r2;
                     } else {
                         log.info("La chambre est pleine");
-                        return null; // Retourner null si la chambre est DOUBLE ou SIMPLE et déjà pleine
+                        return null;
                     }
                 default:
                     log.info("Capacité maximale de la chambre atteinte");

@@ -1,0 +1,103 @@
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import tn.esprit.foyer.entities.Chambre;
+import tn.esprit.foyer.entities.Etudiant;
+import tn.esprit.foyer.entities.Reservation;
+import tn.esprit.foyer.entities.TypeChambre;
+import tn.esprit.foyer.repository.ChambreRepository;
+import tn.esprit.foyer.repository.EtudiantRepository;
+import tn.esprit.foyer.repository.ReservationRepository;
+import tn.esprit.foyer.services.ReservationServicImpl;
+
+import java.util.ArrayList;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class) // Utilisation de l'extension Mockito
+public class TestReservationServiceImpl {
+
+    @Mock
+    private EtudiantRepository etudiantRepository;
+
+    @Mock
+    private ChambreRepository chambreRepository;
+
+    @Mock
+    private ReservationRepository reservationRepository;
+
+    @InjectMocks
+    private ReservationServicImpl reservationService; // Assurez-vous du bon nom de la classe
+
+    private Reservation reservation;
+    private Etudiant etudiant;
+    private Chambre chambre;
+
+    @BeforeEach
+    void setUp() {
+        // Initialisation des objets nécessaires pour les tests
+        etudiant = new Etudiant();
+        etudiant.setCin(123456L);
+        etudiant.setNomEt("John Doe");
+
+        chambre = new Chambre();
+        chambre.setNumeroChambre(101L);
+        chambre.setTypeC(TypeChambre.SIMPLE);
+        chambre.setEstDisponible(true);
+
+        reservation = new Reservation();
+        reservation.setIdReservation("1011234562025");
+        reservation.setEtudiants(new ArrayList<>());
+        reservation.setEstValid(true);
+    }
+
+//    @Test
+//    void testAjouterReservationEtAssignerAChambreEtAEtudiant_AucuneReservation() {
+//        // Simuler la recherche de l'étudiant et de la chambre
+//        when(etudiantRepository.findByCin(123456L)).thenReturn(etudiant);
+//        when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre);
+//        when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
+//        when(reservationRepository.findById("1011234562025")).thenReturn(Optional.of(reservation));
+//
+//        // Ajouter l'étudiant et la chambre dans les repositories simulés
+//        etudiantRepository.save(etudiant);
+//        chambreRepository.save(chambre);
+//
+//        // Ajouter une réservation
+//        reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 123456L);
+//
+//        // Vérification des résultats
+//        Reservation result = reservationRepository.findById("1011234562025").orElse(null);
+//        assertNotNull(result);
+//        assertEquals("1011234562025", result.getIdReservation());
+//        assertTrue(result.getEtudiants().contains(etudiant));
+//        assertEquals(1, result.getEtudiants().size());
+//
+//        // Vérification de la mise à jour de la chambre
+//        verify(chambreRepository, times(1)).save(chambre);
+//
+//        // Vérification de l'appel à la sauvegarde de la réservation
+//        verify(reservationRepository, times(1)).save(any(Reservation.class));
+//    }
+
+    @Test
+    void testAjouterReservationChambreIndisponible() {
+        // Simuler un cas où la chambre n'est pas disponible
+        when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre);
+        when(etudiantRepository.findByCin(123456L)).thenReturn(etudiant);
+
+        // Modifier la disponibilité de la chambre pour la rendre indisponible
+        chambre.setEstDisponible(false);
+
+        // Vérification de l'exception levée
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 123456L);
+        });
+        assertEquals("Chambre non disponible", exception.getMessage());
+    }
+}
