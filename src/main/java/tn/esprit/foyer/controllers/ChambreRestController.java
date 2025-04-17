@@ -3,17 +3,14 @@ package tn.esprit.foyer.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.foyer.entities.Chambre;
-import tn.esprit.foyer.entities.TypeChambre;
-import tn.esprit.foyer.services.IChambreService;
-import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/chambre")
 
 public class ChambreRestController {
-    IChambreService chambreService;
+   /* IChambreService chambreService;
     // http://localhost:8089/foyer/chambre/retrieve-all-chambres
     @GetMapping("/retrieve-all-chambres")
     @ResponseBody
@@ -92,5 +89,5 @@ public class ChambreRestController {
         public  List<Chambre> getChambresNonReserveParNomFoyerEtTypeChambre(@PathVariable("nomFoyer") String nomFoyer,@PathVariable("type") TypeChambre type) {
             return chambreService.getChambresNonReserveParNomFoyerEtTypeChambre(nomFoyer,type);
         }
-
+*/
 }

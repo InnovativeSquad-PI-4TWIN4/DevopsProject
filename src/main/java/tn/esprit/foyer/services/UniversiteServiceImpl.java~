@@ -59,18 +59,16 @@ public class UniversiteServiceImpl implements IUniversiteService{
 
     @Override
     public Long desaffecterFoyerAUniversite(long idFoyer) {
-
-        Foyer f = foyerRepository.findById(idFoyer)
-                .orElseThrow(() -> new IllegalArgumentException("Foyer non trouvé avec l'ID : " + idFoyer));
-
-
+        // t1 = recuperer le temps (date sys)
+        Foyer f = foyerRepository.findById(idFoyer).get();
         f.setUniversite(null);
+        //
         foyerRepository.save(f);
-
+        // t2 = recuperer le temps (date sys)
+        // te= t2-t1
 
         return f.getIdFoyer();
     }
-
 
 
 

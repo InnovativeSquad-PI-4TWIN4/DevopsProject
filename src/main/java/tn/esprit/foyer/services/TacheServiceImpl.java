@@ -2,7 +2,6 @@ package tn.esprit.foyer.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.foyer.entities.Etudiant;
 import tn.esprit.foyer.entities.Tache;
@@ -16,10 +15,11 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class TacheServiceImpl implements ITacheService{
+public class TacheServiceImpl implements ITacheService {
 
     TacheRepository tacheRepository;
     EtudiantRepository etudiantRepository;
+
     @Override
     public List<Tache> retrieveAllTaches() {
         return tacheRepository.findAll();
@@ -37,7 +37,8 @@ public class TacheServiceImpl implements ITacheService{
 
     @Override
     public Tache retrieveTache(Long idTache) {
-        return tacheRepository.findById(idTache).get();
+        return tacheRepository.findById(idTache)
+                .orElseThrow(() -> new IllegalArgumentException("Tâche non trouvée avec l'ID : " + idTache));
     }
 
     @Override
@@ -45,54 +46,39 @@ public class TacheServiceImpl implements ITacheService{
         tacheRepository.deleteById(idTache);
     }
 
-
-
-
     @Override
     public List<Tache> addTachesAndAffectToEtudiant(List<Tache> taches, String nomEt, String prenomEt) {
-        Etudiant et = etudiantRepository.findByNomEtAndPrenomEt(nomEt,prenomEt);
-        taches.forEach(tache -> {
-            tache.setEtudiant(et);
-          //  tacheRepository.save(tache);
-        });
-        tacheRepository.saveAll(taches);
-        return taches;
+        Etudiant et = etudiantRepository.findByNomEtAndPrenomEt(nomEt, prenomEt);
+        taches.forEach(t -> t.setEtudiant(et));
+        return tacheRepository.saveAll(taches);
     }
 
     @Override
     public HashMap<String, Float> calculNouveauMontantInscriptionDesEtudiants() {
-        HashMap<String, Float> nouveauxMontantsInscription = new HashMap<>();
+        HashMap<String, Float> nouveauxMontants = new HashMap<>();
+        LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
+        LocalDate endDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
+
         etudiantRepository.findAll().forEach(etudiant -> {
-            Float ancienMontant= etudiant.getMontantInscription();
-            LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), 1,1);
-            LocalDate endDate = LocalDate.of(LocalDate.now().getYear(), 12,31);
-            Float montantTachesAssignesAnneeEnCours = tacheRepository.
-                    sommeTacheAnneeEncours(startDate,endDate,etudiant.getIdEtudiant());
-            Float nouveauMontant = ancienMontant;
-            if (montantTachesAssignesAnneeEnCours!=null) {
-                 nouveauMontant = ancienMontant - montantTachesAssignesAnneeEnCours;
-            }
-            nouveauxMontantsInscription.put(etudiant.getNomEt()+" "+etudiant.getPrenomEt(),
-                    nouveauMontant);
+            Float montantInitial = etudiant.getMontantInscription();
+            Float reduction = tacheRepository.sommeTacheAnneeEncours(startDate, endDate, etudiant.getIdEtudiant());
+            Float montantFinal = reduction != null ? montantInitial - reduction : montantInitial;
+            nouveauxMontants.put(etudiant.getNomEt() + " " + etudiant.getPrenomEt(), montantFinal);
         });
-        return nouveauxMontantsInscription;
+
+        return nouveauxMontants;
     }
 
-    //@Scheduled(cron = "0 30 14 09 09 *")
     public void updateNouveauMontantInscriptionDesEtudiants() {
+        LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
+        LocalDate endDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
+
         etudiantRepository.findAll().forEach(etudiant -> {
-            Float montantInscription= etudiant.getMontantInscription();
-            LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), 1,1);
-            LocalDate endDate = LocalDate.of(LocalDate.now().getYear(), 12,31);
-            Float montantTachesAssignesAnneeEnCours = tacheRepository.sommeTacheAnneeEncours(startDate,endDate,etudiant.getIdEtudiant());
-            if (montantTachesAssignesAnneeEnCours!=null) {
-                montantInscription = montantInscription - montantTachesAssignesAnneeEnCours;
-                etudiant.setMontantInscription(montantInscription);
+            Float reduction = tacheRepository.sommeTacheAnneeEncours(startDate, endDate, etudiant.getIdEtudiant());
+            if (reduction != null) {
+                etudiant.setMontantInscription(etudiant.getMontantInscription() - reduction);
                 etudiantRepository.save(etudiant);
             }
-
         });
     }
-
-
 }

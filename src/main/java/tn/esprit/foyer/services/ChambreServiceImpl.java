@@ -2,37 +2,21 @@ package tn.esprit.foyer.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import tn.esprit.foyer.entities.Bloc;
-import tn.esprit.foyer.entities.Chambre;
-import tn.esprit.foyer.entities.Foyer;
-import tn.esprit.foyer.entities.TypeChambre;
-import tn.esprit.foyer.repository.BlocRepository;
-import tn.esprit.foyer.repository.ChambreRepository;
-import tn.esprit.foyer.repository.FoyerRepository;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 @AllArgsConstructor
-public class ChambreServiceImpl implements IChambreService {
-
+public class ChambreServiceImpl  {
+/*
     ChambreRepository chambreRepository;
-
     BlocRepository blocRepository;
-
     FoyerRepository foyerRepository;
 
     @Override
     public List<Chambre> retrieveAllChambres() {
-
-        System.out.println("in method retrieveAllChambres");
+        log.info("▶️ In method retrieveAllChambres()");
         return chambreRepository.findAll();
     }
 
@@ -48,9 +32,8 @@ public class ChambreServiceImpl implements IChambreService {
 
     @Override
     public Chambre retrieveChambre(Long idChambre) {
-
-
-        return chambreRepository.findById(idChambre).orElse(null);
+        return chambreRepository.findById(idChambre)
+                .orElseThrow(() -> new IllegalArgumentException("Chambre introuvable avec l'ID : " + idChambre));
     }
 
     @Override
@@ -60,32 +43,26 @@ public class ChambreServiceImpl implements IChambreService {
 
     @Override
     public List<Chambre> findByTypeCAndBlocIdBloc(TypeChambre typeChambre, Long idBloc) {
-        //   return chambreRepository.findByTypeCAndBlocIdBloc(typeChambre,idBloc);
         return chambreRepository.findByTypeCAndBlocIdBloc(typeChambre, idBloc);
     }
 
     @Override
     public List<Chambre> findByReservationsEstValid(Boolean estValid) {
-        // return chambreRepository.findByReservationsEstValid(estValid);
         return chambreRepository.findByReservationsValide(estValid);
     }
 
     @Override
     public List<Chambre> findByBlocIdBlocAndBlocCapaciteBlocGreaterThan(Long idBloc, Long capaciteBloc) {
-        //   return chambreRepository.findByBlocIdBlocAndBlocCapaciteBlocGreaterThan(idBloc,capaciteBloc);
         return chambreRepository.findByBlocIdBlocAndBlocCapaciteBloc(idBloc, capaciteBloc);
     }
 
     @Override
     public List<Chambre> getChambresParNomBloc(String nomBloc) {
         return chambreRepository.findByBlocNomBloc(nomBloc);
-
     }
-
 
     @Override
     public long nbChambreParTypeEtBloc(TypeChambre type, long idBloc) {
-
         return chambreRepository.nbChambreParTypeEtBloc(type, idBloc);
     }
 
@@ -94,38 +71,35 @@ public class ChambreServiceImpl implements IChambreService {
         List<Chambre> chambresDisponibles = new ArrayList<>();
         LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
         LocalDate endDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
-        Foyer f = foyerRepository.findByNomFoyer(nomFoyer);
-        Optional<List<Bloc>> blocsParFoyer = Optional.ofNullable(f.getBlocs());
-        if (blocsParFoyer.isPresent()) {
-            blocsParFoyer.get().forEach(bloc ->
-                    bloc.getChambres().forEach(chambre ->
-                    {
-                        if(chambre.getTypeC().equals(type)) {
-                            Long nbReservationChambre = chambreRepository.checkNbReservationsChambre(startDate, endDate, type, chambre.getNumeroChambre());
-                            if ((chambre.getTypeC().equals(TypeChambre.SIMPLE) && nbReservationChambre == 0) ||
-                                    (chambre.getTypeC().equals(TypeChambre.DOUBLE) && nbReservationChambre < 2) ||
-                                    (chambre.getTypeC().equals(TypeChambre.TRIPLE) && nbReservationChambre < 3)){
+        Foyer foyer = foyerRepository.findByNomFoyer(nomFoyer);
+
+        if (foyer != null && foyer.getBlocs() != null) {
+            foyer.getBlocs().forEach(bloc ->
+                    bloc.getChambres().forEach(chambre -> {
+                        if (chambre.getTypeC().equals(type)) {
+                            Long nbRes = chambreRepository.checkNbReservationsChambre(startDate, endDate, type, chambre.getNumeroChambre());
+                            if ((type == TypeChambre.SIMPLE && nbRes == 0) ||
+                                    (type == TypeChambre.DOUBLE && nbRes < 2) ||
+                                    (type == TypeChambre.TRIPLE && nbRes < 3)) {
                                 chambresDisponibles.add(chambre);
                             }
                         }
-                    }));
+                    })
+            );
         }
+
         return chambresDisponibles;
     }
 
-  //  @Scheduled(fixedRate = 60000)
+    // @Scheduled(fixedRate = 60000)
     public void pourcentageChambreParTypeChambre() {
-        Integer nbTotalsChambres = chambreRepository.findAll().size();
-        log.info("nbTotalsChambres : " + nbTotalsChambres);
-        Arrays.stream(TypeChambre.values()).forEach(
-                typeChambre -> {
-                    Integer nbChambresParType = chambreRepository.nbChambresParType(typeChambre);
-                    Double pourcentageParType = (nbChambresParType.doubleValue() / nbTotalsChambres.doubleValue()) * 100;
-                    log.info("le pourcentage des chambres pour le type " + typeChambre + " est égale à "
-                            + pourcentageParType);
-                }
-        );
-    }
+        int nbTotal = chambreRepository.findAll().size();
+        log.info("Nombre total de chambres : {}", nbTotal);
 
-
+        Arrays.stream(TypeChambre.values()).forEach(type -> {
+            int nbParType = chambreRepository.nbChambresParType(type);
+            double pourcentage = (nbParType * 100.0) / nbTotal;
+            log.info("📊 Pourcentage de chambres pour le type {} : {}%", type, pourcentage);
+        });
+    }*/
 }
