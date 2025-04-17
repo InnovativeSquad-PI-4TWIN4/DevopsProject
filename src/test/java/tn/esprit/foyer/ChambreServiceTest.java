@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) // JUnit + Mockito
-public class ChambreServiceTest {
+ class ChambreServiceTest {
 
     @Mock  // Mockito : simulateur de ChambreRepository
     private ChambreRepository chambreRepository;
