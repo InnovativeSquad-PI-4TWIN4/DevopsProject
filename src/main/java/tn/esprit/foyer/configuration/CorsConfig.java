@@ -13,8 +13,7 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // autoriser toutes les routes
-                        .allowedOrigins("*") // autoriser toutes les origines (ou "http://localhost:52924")
+                registry.addMapping("/**") // autoriser toutes les route
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(false); // mettre à true si tu gères les cookies
