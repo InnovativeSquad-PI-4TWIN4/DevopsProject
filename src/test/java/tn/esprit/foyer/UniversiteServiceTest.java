@@ -6,10 +6,8 @@ import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
 import tn.esprit.foyer.entities.Foyer;
 import tn.esprit.foyer.entities.Universite;
 import tn.esprit.foyer.repository.FoyerRepository;
@@ -27,9 +25,6 @@ class UniversiteServiceTest {
     @Mock
     private UniversiteRepository universiteRepository;
 
-    @Mock  // 🔹 Mock du Logger pour capturer les logs
-    private Logger log;
-
     private UniversiteServiceImpl universiteService;
 
     private Foyer foyer;
@@ -39,7 +34,7 @@ class UniversiteServiceTest {
     void setUp() {
         foyer = new Foyer();
         universite = new Universite();
-        universiteService = new UniversiteServiceImpl(universiteRepository, foyerRepository, log);  // ✅ Injecte le logger mocké
+        universiteService = new UniversiteServiceImpl(universiteRepository, foyerRepository);
     }
 
     @Test
@@ -56,6 +51,5 @@ class UniversiteServiceTest {
         assertEquals(universite, foyer.getUniversite());
 
         verify(foyerRepository).save(foyer);
-        verify(log, times(1)).info("Fin méthode affecterFoyerAUniversite");  // ✅ Vérification du log
     }
 }
