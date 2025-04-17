@@ -29,7 +29,7 @@ public class Chambre implements Serializable {
 
 
     @OneToMany(fetch = FetchType.EAGER)
-    List<Reservation> reservations;
+   private List<Reservation> reservations;
     @ManyToOne
     @JsonIgnore
     Bloc bloc;

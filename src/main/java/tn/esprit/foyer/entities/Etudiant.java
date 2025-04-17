@@ -22,7 +22,7 @@ public class Etudiant implements Serializable {
     private Long idEtudiant;
 
     @EqualsAndHashCode.Include
-    private Long cin; // ⚠️ identifiant unique logique
+    private Long cin;
 
     private String nomEt;
     private String prenomEt;
@@ -31,7 +31,7 @@ public class Etudiant implements Serializable {
 
     @OneToMany(mappedBy = "etudiant")
     @JsonIgnore
-    List<Tache> taches;
+    private List<Tache> taches;
 
     Float montantInscription;
 
@@ -40,7 +40,7 @@ public class Etudiant implements Serializable {
 
     @ManyToMany(mappedBy = "etudiants", fetch = FetchType.EAGER)
     @JsonIgnore
-    List<Reservation> reservations;
+    private List<Reservation> reservations;
 
     @OneToOne
     @JsonIgnore
