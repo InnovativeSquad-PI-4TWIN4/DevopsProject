@@ -155,6 +155,18 @@ services:
     networks:
       - foyer-network
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9001:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - foyer-network
+    restart: unless-stopped
+
 networks:
   foyer-network:
     driver: bridge
@@ -167,3 +179,4 @@ volumes:
   sonarqube_logs:
   sonarqube_extensions:
   nexus_data:
+  portainer_data:
