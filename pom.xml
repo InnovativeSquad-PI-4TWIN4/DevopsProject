@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -8,6 +8,7 @@
 		<version>3.1.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+
 	<groupId>tn.esprit</groupId>
 	<artifactId>firas-4twin4-g1-tpfoyer</artifactId>
 	<version>3.0.0</version>
@@ -16,10 +17,8 @@
 	<properties>
 		<java.version>17</java.version>
 		<sonar.host.url>http://localhost:9000</sonar.host.url>
-		<!-- Supprimé les propriétés login/password et remplacé par token -->
-		<!-- Ne pas mettre le token directement ici, il sera fourni par Jenkins -->
 	</properties>
-	
+
 	<!-- Configuration pour Nexus -->
 	<distributionManagement>
 		<repository>
@@ -31,7 +30,7 @@
 			<url>http://localhost:8081/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -46,15 +45,14 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.0.4</version>
 		</dependency>
-		<!-- Micrometer core dependency -->
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-actuator</artifactId>
-</dependency>
-<dependency>
-    <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-registry-prometheus</artifactId>
-</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-registry-prometheus</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
@@ -70,7 +68,6 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!-- Dépendances pour les tests unitaires - sans duplications -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
@@ -105,7 +102,6 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			<!-- Plugin JaCoCo pour la couverture de code -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
@@ -126,13 +122,11 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Plugin SonarQube -->
 			<plugin>
 				<groupId>org.sonarsource.scanner.maven</groupId>
 				<artifactId>sonar-maven-plugin</artifactId>
 				<version>3.9.1.2184</version>
 			</plugin>
-			<!-- Configuration pour JUnit -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

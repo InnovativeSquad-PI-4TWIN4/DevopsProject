@@ -33,11 +33,11 @@ services:
     networks:
       - app-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8089"]
+      test: ["CMD", "curl", "-f", "http://localhost:8089/foyer/actuator/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 30s
+      start_period: 60s  # Increased to 60s
 
   frontend:
     image: firas090/devopsrepository-frontend:latest
