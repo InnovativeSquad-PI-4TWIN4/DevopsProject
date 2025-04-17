@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Stop and remove existing containers 
+# Stop and remove existing containers
 docker compose down
 
 # Pull latest images
