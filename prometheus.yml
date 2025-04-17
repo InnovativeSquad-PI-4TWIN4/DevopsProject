@@ -4,13 +4,14 @@
     scrape_timeout: 10s
   
   scrape_configs:
-    # Jenkins metrics
     - job_name: 'jenkins'
       metrics_path: '/prometheus'
       static_configs:
-        - targets: ['10.255.255.254:8080']  # Works in WSL2
+        - targets: [ '10.255.255.254:8080' ]
           labels:
             service: 'jenkins'
+      params:
+        module: [ default ]
       scheme: http
       tls_config:
         insecure_skip_verify: true
