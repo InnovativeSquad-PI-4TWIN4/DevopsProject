@@ -1,17 +1,16 @@
 #!/bin/bash
 
-# Stop and remove existing containers
+# Stop and remove existing containers (except portainer)
 docker-compose down
 
-# Pull latest images
+# Pull latest images (except portainer)
 docker pull dhiashayeb017/chaiebdhia_4twin4_innovativesquad_foyer:latest
 docker pull prom/prometheus:latest
 docker pull grafana/grafana:latest
-docker pull portainer/portainer-ce:latest
 
-
-# Start containers in detached mode
-docker-compose up -d --build
+# Start containers in detached mode (don't rebuild portainer)
+docker-compose up -d --build --no-deps --scale portainer=0
+docker-compose up -d portainer  # Start portainer separately without rebuilding
 
 # Verify services
 echo "Waiting for services to start..."

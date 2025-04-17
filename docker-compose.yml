@@ -171,9 +171,18 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+      - ./portainer-data:/data  # Additional volume for persistence
+    environment:
+      - PORTAINER_ADMIN_PASSWORD_FILE=/data/admin_password  # Store password in file
+      - PORTAINER_ADMIN_PASSWORD=your_secure_password_here  # Or use this directly
     networks:
       - foyer-network
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/api/status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   watchtower:
     image: containrrr/watchtower:latest
