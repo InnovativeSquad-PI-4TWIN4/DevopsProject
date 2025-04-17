@@ -1,16 +1,20 @@
 package tn.esprit.foyer.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.foyer.dto.ReservationDTO;
 import tn.esprit.foyer.entities.Reservation;
 import tn.esprit.foyer.services.IReservationService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
+@Slf4j
 @AllArgsConstructor
 @RequestMapping("/reservation")
 @CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -18,17 +22,17 @@ public class ReservationRestController {
     IReservationService reservationService;
     // http://localhost:8089/foyer/reservation/retrieve-all-reservations
     @GetMapping("/retrieve-all-reservations")
-    @ResponseBody
-    public List<Reservation> getAllReservations() {
+    public ResponseEntity<List<Reservation>> getAllReservations() {
         try {
             List<Reservation> list = reservationService.retrieveAllReservations();
-            System.out.println("✅ Total réservations retournées : " + list.size());
-            return list;
+            log.info("✅ Total réservations retournées : {}", list.size());
+            return ResponseEntity.ok(list);
         } catch (Exception e) {
-            e.printStackTrace(); // pour voir l'erreur exacte dans la console
-            return new ArrayList<>();
+            log.error("Erreur lors de la récupération des réservations", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
+
 
 
 
