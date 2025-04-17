@@ -6,9 +6,14 @@ set -e  # Exit on any error
 LOG_FILE="deploy.log"
 echo "Starting deployment at $(date)" | tee -a $LOG_FILE
 
-# Stop and remove existing containers
+# Debugging: Check Docker and Docker Compose availability
+echo "Checking Docker and Docker Compose..." | tee -a $LOG_FILE
+docker --version >> $LOG_FILE 2>&1 || { echo "Docker not found or inaccessible" | tee -a $LOG_FILE; exit 1; }
+docker-compose --version >> $LOG_FILE 2>&1 || { echo "Docker Compose not found or inaccessible" | tee -a $LOG_FILE; exit 1; }
+
+# Stop and remove existing containers (handle case where no containers exist)
 echo "Stopping and removing existing containers..." | tee -a $LOG_FILE
-docker-compose down >> $LOG_FILE 2>&1 || { echo "Failed to stop containers" | tee -a $LOG_FILE; exit 1; }
+docker-compose down >> $LOG_FILE 2>&1 || echo "No containers to stop or docker-compose down failed (continuing anyway)" | tee -a $LOG_FILE
 
 # Pull latest images
 echo "Pulling latest images..." | tee -a $LOG_FILE
