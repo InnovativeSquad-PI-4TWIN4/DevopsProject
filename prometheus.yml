@@ -1,25 +1,24 @@
   global:
     scrape_interval: 15s
     evaluation_interval: 15s
-    scrape_timeout: 10s  # Added timeout
+    scrape_timeout: 10s
   
   scrape_configs:
-    # Jenkins metrics (running on Windows host)
+    # Jenkins metrics
     - job_name: 'jenkins'
       metrics_path: '/prometheus'
       static_configs:
         - targets: ['10.255.255.254:8080']  # Works in WSL2
           labels:
             service: 'jenkins'
-      # Added connection settings for reliability
       scheme: http
       tls_config:
         insecure_skip_verify: true
   
-    # Prometheus self-monitoring (in-container)
+    # Prometheus self-monitoring
     - job_name: 'prometheus'
       static_configs:
-        - targets: ['prometheus:9090']  # Using service name
+        - targets: ['prometheus:9090']
           labels:
             service: 'prometheus'
   
@@ -28,3 +27,4 @@
       metrics_path: '/foyer/actuator/prometheus'
       static_configs:
         - targets: [ 'spring-app:8089' ]
+
