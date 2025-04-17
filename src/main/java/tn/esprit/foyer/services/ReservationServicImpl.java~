@@ -126,6 +126,7 @@ public class ReservationServicImpl implements IReservationService {
         List<Chambre> chambresDisponibles = chambreRepository.findAll();
         chambresDisponibles.forEach(
                 chambre -> {
+         /
                   AtomicReference<Integer> nbChambresOccupes = new AtomicReference<>(0);
 
                     if(chambre.getReservations()!=null)
