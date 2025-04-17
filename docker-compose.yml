@@ -1,49 +1,41 @@
 version: '3.8'
 
 services:
-  sonarqube:
-    image: sonarqube:lts
-    container_name: sonarqube
-    restart: always
-    environment:
-      SONAR_JDBC_URL: jdbc:postgresql://sonarqube-db:5432/sonarqube
-      SONAR_JDBC_USERNAME: sonarqube
-      SONAR_JDBC_PASSWORD: sonarqube
+  backend:
+    image: ayouta666/devopsrepository:latest
     ports:
-      - "9000:9000"
+      - "8089:8089"
     depends_on:
-      - sonarqube-db
-    networks:
-      - devops-net
-
-  sonarqube-db:
-    image: postgres:13
-    container_name: sonarqube-db
-    restart: always
+      mysql:
+        condition: service_healthy
     environment:
-      POSTGRES_USER: sonarqube
-      POSTGRES_PASSWORD: sonarqube
-      POSTGRES_DB: sonarqube
-    networks:
-      - devops-net
-    volumes:
-      - sonarqube_db_data:/var/lib/postgresql/data
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/projet?createDatabaseIfNotExist=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=""
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
-  nexus:
-    image: sonatype/nexus3
-    container_name: nexus
-    restart: always
+  # frontend:
+  #   image: firas090/devopsrepository-frontend:latest
+  #   ports:
+  #     - "4200:80"
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=""
+      - MYSQL_DATABASE=projet
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
     ports:
-      - "8081:8081"
+      - "3307:3306"
     volumes:
-      - nexus_data:/nexus-data
-    networks:
-      - devops-net
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-networks:
-  devops-net:
-    driver: bridge
+
 
 volumes:
-  sonarqube_db_data:
-  nexus_data:
+  mysql-data:
