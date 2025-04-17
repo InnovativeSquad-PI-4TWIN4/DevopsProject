@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
- class TacheServiceImplMockitoTest {
+public class TacheServiceImplMockitoTest {
 
     @Mock   //Permet de créer un mock (simulation) d'une dépendance.
     private TacheRepository tacheRepository;
