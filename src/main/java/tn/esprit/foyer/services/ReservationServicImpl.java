@@ -26,6 +26,7 @@ public class ReservationServicImpl implements IReservationService {
     ChambreRepository chambreRepository;
     EtudiantRepository etudiantRepository;
 
+
     @Override
     public List<Reservation> retrieveAllReservations() {
         return reservationRepository.findAll();
@@ -42,83 +43,73 @@ public class ReservationServicImpl implements IReservationService {
     }
 
     @Override
-    public Reservation retrieveReservation(String idReservation) {
+    public Reservation retrieveReservation(Long idReservation) {
         return reservationRepository.findById(idReservation).orElse(null);
     }
 
     @Override
-    public void removeReservation(String idReservation){
+    public void removeReservation(Long idReservation){
             reservationRepository.deleteById(idReservation);
 
     }
 
     @Transactional
     public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(Reservation res, Long numChambre, long cin) {
+        // Dates de début et fin de l'année universitaire
         LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), 1, 1);
         LocalDate endDate = LocalDate.of(LocalDate.now().getYear(), 12, 31);
+
+        // Récupération de l'étudiant et de la chambre
         Etudiant e = etudiantRepository.findByCin(cin);
         Chambre c = chambreRepository.findByNumeroChambre(numChambre);
-        res.setIdReservation(numChambre + e.getCin().toString() + LocalDate.now().getYear());
-        res.setEstValid(true);
 
-        // Liste mutable d'étudiants
-        List<Etudiant> etudiants = new ArrayList<>();
-        if (res.getEtudiants() != null) {
-            etudiants.addAll(res.getEtudiants());
+        if (e == null || c == null) {
+            log.warn("Étudiant ou chambre introuvable.");
+            return null;
         }
-        etudiants.add(e);
+
+        res.setEstValid(true);
+        res.setAnneeUniversitaire(LocalDate.now());
+
+        // Ajouter l'étudiant à la réservation
+        List<Etudiant> etudiants = res.getEtudiants() != null ? new ArrayList<>(res.getEtudiants()) : new ArrayList<>();
+        if (!etudiants.contains(e)) {
+            etudiants.add(e);
+        }
         res.setEtudiants(etudiants);
 
-        // Vérification et ajout de la réservation à la chambre
-        if (c.getReservations() != null) {
-            Integer reservationSize = reservationRepository.getReservationsCurrentYear(startDate, endDate, numChambre);
-            switch (reservationSize) {
-                case 0:
-                    log.info("Aucune réservation actuelle");
-                    Reservation r = reservationRepository.save(res);
-                    List<Reservation> reservations = new ArrayList<>(c.getReservations()); // Création d'une liste mutable
-                    reservations.add(r); // Ajout de la nouvelle réservation
-                    c.setReservations(reservations); // Mise à jour de la liste
-                    chambreRepository.save(c);
-                    return r;
-                case 1:
-                    log.info("Une réservation en cours");
-                    if (c.getTypeC().equals(TypeChambre.DOUBLE) || c.getTypeC().equals(TypeChambre.TRIPLE)) {
-                        Reservation r1 = reservationRepository.save(res);
-                        List<Reservation> reservations1 = new ArrayList<>(c.getReservations());
-                        reservations1.add(r1);
-                        c.setReservations(reservations1);
-                        chambreRepository.save(c);
-                        return r1;
-                    } else {
-                        log.info("La chambre simple est déjà réservée");
-                        return null; // Retourner null si la chambre est SIMPLE et déjà réservée
-                    }
-                case 2:
-                    log.info("Deux réservations en cours");
-                    if (c.getTypeC().equals(TypeChambre.TRIPLE)) {
-                        Reservation r2 = reservationRepository.save(res);
-                        List<Reservation> reservations2 = new ArrayList<>(c.getReservations());
-                        reservations2.add(r2);
-                        c.setReservations(reservations2);
-                        chambreRepository.save(c);
-                        return r2;
-                    } else {
-                        log.info("La chambre est pleine");
-                        return null; // Retourner null si la chambre est DOUBLE ou SIMPLE et déjà pleine
-                    }
-                default:
-                    log.info("Capacité maximale de la chambre atteinte");
-                    return null;
-            }
-        } else {
-            // Si aucune réservation n'existe, initialisation d'une nouvelle liste
+        // Compter les réservations existantes cette année pour cette chambre
+        Integer reservationCount = reservationRepository.getReservationsCurrentYear(startDate, endDate, numChambre);
+        TypeChambre type = c.getTypeC();
+
+        boolean peutAjouter = false;
+
+        switch (reservationCount) {
+            case 0:
+                peutAjouter = true;
+                break;
+            case 1:
+                peutAjouter = (type == TypeChambre.DOUBLE || type == TypeChambre.TRIPLE);
+                break;
+            case 2:
+                peutAjouter = (type == TypeChambre.TRIPLE);
+                break;
+            default:
+                log.info("Capacité maximale atteinte pour la chambre " + numChambre);
+                return null;
+        }
+
+        if (peutAjouter) {
             Reservation r = reservationRepository.save(res);
-            List<Reservation> reservations = new ArrayList<>();
+            List<Reservation> reservations = c.getReservations() != null ? new ArrayList<>(c.getReservations()) : new ArrayList<>();
             reservations.add(r);
             c.setReservations(reservations);
             chambreRepository.save(c);
+            log.info("Réservation ajoutée avec succès pour la chambre " + numChambre);
             return r;
+        } else {
+            log.info("La chambre " + numChambre + " est déjà pleine.");
+            return null;
         }
     }
 

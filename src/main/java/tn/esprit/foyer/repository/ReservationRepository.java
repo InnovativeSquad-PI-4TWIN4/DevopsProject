@@ -9,7 +9,7 @@ import java.util.List;
 
 
 
-public interface ReservationRepository extends JpaRepository<Reservation,String> {
+public interface ReservationRepository extends JpaRepository<Reservation,Long> {
 
 List<Reservation> findByAnneeUniversitaireBetween(LocalDate dateDebut, LocalDate d2);
 

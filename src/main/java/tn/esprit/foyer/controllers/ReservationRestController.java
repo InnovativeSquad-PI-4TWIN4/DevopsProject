@@ -2,29 +2,42 @@ package tn.esprit.foyer.controllers;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.foyer.dto.ReservationDTO;
 import tn.esprit.foyer.entities.Reservation;
 import tn.esprit.foyer.services.IReservationService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/reservation")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class ReservationRestController {
     IReservationService reservationService;
     // http://localhost:8089/foyer/reservation/retrieve-all-reservations
     @GetMapping("/retrieve-all-reservations")
     @ResponseBody
-    public List<Reservation> getReservations() {
-        List<Reservation> listReservations = reservationService.retrieveAllReservations();
-        return listReservations;
+    public List<Reservation> getAllReservations() {
+        try {
+            List<Reservation> list = reservationService.retrieveAllReservations();
+            System.out.println("✅ Total réservations retournées : " + list.size());
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace(); // pour voir l'erreur exacte dans la console
+            return new ArrayList<>();
+        }
     }
+
+
+
+
 
     // http://localhost:8089/foyer/reservation/retrieve-reservation/8
     @GetMapping("/retrieve-reservation/{reservationId}")
     @ResponseBody
-    public Reservation retrieveReservation(@PathVariable("reservationId") String reservationId) {
+    public Reservation retrieveReservation(@PathVariable("reservationId") Long reservationId) {
         return reservationService.retrieveReservation(reservationId);
     }
 
@@ -46,7 +59,7 @@ public class ReservationRestController {
     // http://localhost:8089/foyer/reservation/removeReservation
     @DeleteMapping("/removeReservation/{idReservation}")
     @ResponseBody
-    public void removeReservation(@PathVariable("idReservation") String idReservation) {
+    public void removeReservation(@PathVariable("idReservation") Long idReservation) {
         reservationService.removeReservation(idReservation);
     }
 

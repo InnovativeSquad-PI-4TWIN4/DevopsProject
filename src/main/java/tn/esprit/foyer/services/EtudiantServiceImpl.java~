@@ -74,32 +74,18 @@ public class EtudiantServiceImpl implements  IEtudiantService{
     }
 
     @Override
-    public Etudiant affecterEtudiantAReservation(String nomEt, String prenomEt, String idReservation) {
-        // 🔍 Recherche de l'étudiant par nom + prénom
-        Etudiant e = etudiantRepository.findByNomEtAndPrenomEt(nomEt, prenomEt);
-
-        // ❗ Vérification de nullité de l'étudiant
-        if (e == null) {
-            throw new IllegalArgumentException("Étudiant introuvable avec le nom " + nomEt + " et le prénom " + prenomEt);
+    public Etudiant affecterEtudiantAReservation(String nomEt, String prenomEt,
+                                                 String idReservation) {
+        Etudiant e = etudiantRepository.findByNomEtAndPrenomEt( nomEt, prenomEt);
+        Reservation r = reservationRepository.findById(idReservation).orElse(null);
+           // controle de saisie +
+          List<Etudiant> etudiants = new ArrayList<>();
+        if (r.getEtudiants()!=null) {
+            etudiants.addAll(r.getEtudiants());
         }
-
-        // 🔍 Recherche de la réservation
-        Reservation r = reservationRepository.findById(Long.valueOf(idReservation)).orElse(null);
-
-        // ❗ Vérification de nullité de la réservation
-        if (r == null) {
-            throw new IllegalArgumentException("Réservation introuvable avec l'ID " + idReservation);
-        }
-
-        // ✅ Ajout de l'étudiant à la réservation
-        List<Etudiant> etudiants = r.getEtudiants() != null ? new ArrayList<>(r.getEtudiants()) : new ArrayList<>();
-        etudiants.add(e);
-        r.setEtudiants(etudiants);
-
-        // 💾 Sauvegarde de la réservation mise à jour
-        reservationRepository.save(r);
-
+            etudiants.add(e);
+            r.setEtudiants(etudiants);
+           reservationRepository.save(r);
         return e;
     }
-
 }

@@ -23,7 +23,7 @@ public class Reservation implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column(name="idReservation",length = 50)
-    Long idReservation; // Clé primaire
+    String idReservation; // Clé primaire
    // @Temporal(TemporalType.DATE)
    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
    @JsonFormat(pattern = "yyyy-MM-dd")

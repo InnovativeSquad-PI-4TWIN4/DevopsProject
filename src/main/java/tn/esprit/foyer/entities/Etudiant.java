@@ -1,5 +1,7 @@
 package tn.esprit.foyer.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.io.Serializable;
@@ -28,6 +30,7 @@ public class Etudiant implements Serializable {
     private LocalDate dateNaissance;
 
     @OneToMany(mappedBy = "etudiant")
+    @JsonIgnore
     List<Tache> taches;
 
     Float montantInscription;
@@ -36,9 +39,11 @@ public class Etudiant implements Serializable {
     TypeEtudiant typeEtudiant;
 
     @ManyToMany(mappedBy = "etudiants", fetch = FetchType.EAGER)
+    @JsonIgnore
     List<Reservation> reservations;
 
     @OneToOne
+    @JsonIgnore
     Tache tache;
 
     public Etudiant(String nomEt, String prenomEt, String ecole) {

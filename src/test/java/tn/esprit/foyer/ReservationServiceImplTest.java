@@ -16,6 +16,7 @@ import tn.esprit.foyer.repository.EtudiantRepository;
 import tn.esprit.foyer.repository.ReservationRepository;
 import tn.esprit.foyer.services.ReservationServicImpl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,6 @@ public class ReservationServiceImplTest {
     @BeforeEach
 
     public void setUp() {
-        // Initialisation des objets de test
         etudiant = new Etudiant();
         etudiant.setCin(12345L);
         etudiant.setNomEt("John");
@@ -53,15 +53,15 @@ public class ReservationServiceImplTest {
         chambre = new Chambre();
         chambre.setNumeroChambre(101L);
         chambre.setTypeC(TypeChambre.SIMPLE);
-        chambre.setReservations(new ArrayList<>()); // Chambre sans réservation initiale
+        chambre.setReservations(new ArrayList<>());
 
         reservation = new Reservation();
-        reservation.setIdReservation("1011234512023"); // Exemple d'ID basé sur la chambre et l'étudiant
+        reservation.setIdReservation(1011234512023L); // ✅ Long, plus String
         reservation.setEstValid(true);
-
-        // ✅ Ne pas ajouter d'étudiant ici → sinon tu te retrouves avec 2 étudiants
-        reservation.setEtudiants(new ArrayList<>()); // Liste vide, le service va y ajouter l'étudiant
+        reservation.setAnneeUniversitaire(LocalDate.of(2023, 9, 1));
+        reservation.setEtudiants(new ArrayList<>());
     }
+
 
 
     @Test

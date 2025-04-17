@@ -42,7 +42,7 @@ public class ReservationServiceImplTest {
     private Reservation reservation;
 
     @BeforeEach
-    
+
     public void setUp() {
         // Initialisation des objets de test
         etudiant = new Etudiant();
