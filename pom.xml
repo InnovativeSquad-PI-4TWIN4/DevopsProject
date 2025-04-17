@@ -74,15 +74,14 @@
 
 	<!-- Configuration pour Nexus -->
 
-
-	<distributionManagement>
+<distributionManagement>
 		<repository>
-			<id>deploymentRepo</id>
-			<url>http://172.28.106.196/:8081/repository/maven-releases/</url>
+			<id>nexus-releases</id>
+			<url>http://localhost:8081/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>deploymentRepo</id>
-			<url>http://172.28.106.196/:8081/repository/maven-snapshots/</url>
+			<id>nexus-snapshots</id>
+			<url>http://localhost:8081/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
