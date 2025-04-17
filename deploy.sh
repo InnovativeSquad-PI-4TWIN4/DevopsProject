@@ -7,6 +7,8 @@ docker-compose down
 docker pull dhiashayeb017/chaiebdhia_4twin4_innovativesquad_foyer:latest
 docker pull prom/prometheus:latest
 docker pull grafana/grafana:latest
+docker pull portainer/portainer-ce:latest
+
 
 # Start containers in detached mode
 docker-compose up -d --build

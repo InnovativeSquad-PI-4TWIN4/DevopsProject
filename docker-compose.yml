@@ -28,6 +28,8 @@ services:
 
   spring-app:
     image: dhiashayeb017/chaiebdhia_4twin4_innovativesquad_foyer:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     container_name: spring-app
     ports:
       - "8089:8089"
@@ -51,6 +53,8 @@ services:
 
   prometheus:
     image: prom/prometheus:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     container_name: prometheus
     ports:
       - "9090:9090"
@@ -66,6 +70,8 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     container_name: grafana
     ports:
       - "3000:3000"
@@ -157,6 +163,8 @@ services:
 
   portainer:
     image: portainer/portainer-ce:latest
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     container_name: portainer
     ports:
       - "9001:9000"
@@ -166,6 +174,22 @@ services:
     networks:
       - foyer-network
     restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_SCHEDULE=0 0 4 * * *
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_LABEL_ENABLE=true
+      - WATCHTOWER_NOTIFICATIONS=shoutrrr  # Use shoutrrr for email
+      - WATCHTOWER_NOTIFICATION_SHOUTRRR_URL=smtp://username:password@smtp.gmail.com:587/?from=watchtower@example.com&to=shayebdhia1@gmail.com
+      - WATCHTOWER_NOTIFICATION_SHOUTRRR_TITLE=Watchtower Update Report
+    restart: unless-stopped
+    networks:
+      - foyer-network
 
 networks:
   foyer-network:
