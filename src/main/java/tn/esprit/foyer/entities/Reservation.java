@@ -32,7 +32,7 @@ public class Reservation implements Serializable {
     Boolean estValid;
     @ManyToMany
     @JsonIgnore
-    List<Etudiant> etudiants;
+   private List<Etudiant> etudiants;
 
 }
 

@@ -9,7 +9,6 @@ import tn.esprit.foyer.entities.Reservation;
 import tn.esprit.foyer.services.IReservationService;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,10 +16,15 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RequestMapping("/reservation")
-@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
+@CrossOrigin(
+        origins = "http://localhost:4200",
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}
+)
 public class ReservationRestController {
+
     IReservationService reservationService;
-    // http://localhost:8089/foyer/reservation/retrieve-all-reservations
+
     @GetMapping("/retrieve-all-reservations")
     public ResponseEntity<List<Reservation>> getAllReservations() {
         try {
@@ -33,51 +37,40 @@ public class ReservationRestController {
         }
     }
 
-
-
-
-
-
-    // http://localhost:8089/foyer/reservation/retrieve-reservation/8
     @GetMapping("/retrieve-reservation/{reservationId}")
-
     public Reservation retrieveReservation(@PathVariable("reservationId") Long reservationId) {
         return reservationService.retrieveReservation(reservationId);
     }
 
-    // http://localhost:8089/foyer/reservation/add-reservation
     @PostMapping("/add-reservation")
-
     public Reservation addReservation(@RequestBody Reservation r) {
-        Reservation reservation= reservationService.addReservation(r);
-        return reservation;
+        return reservationService.addReservation(r);
     }
 
-    // http://localhost:8089/foyer/reservation/update-reservation
     @PutMapping("/update-reservation")
-
     public Reservation updateReservation(@RequestBody Reservation r) {
-        Reservation reservation= reservationService.updateReservation(r);
-        return reservation;
+        return reservationService.updateReservation(r);
     }
-    // http://localhost:8089/foyer/reservation/removeReservation
-    @DeleteMapping("/removeReservation/{idReservation}")
 
+    @DeleteMapping("/removeReservation/{idReservation}")
     public void removeReservation(@PathVariable("idReservation") Long idReservation) {
         reservationService.removeReservation(idReservation);
     }
 
-         // http://localhost:8089/foyer/reservation/ajouterReservationEtAssignerAChambreEtAEtudiant/15/8453621
-         @PostMapping("/ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
+    @PostMapping("/ajouterReservationEtAssignerAChambreEtAEtudiant/{numChambre}/{cin}")
+    public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(
+            @RequestBody Reservation r,
+            @PathVariable("numChambre") Long numChambre,
+            @PathVariable("cin") long cin
+    ) {
+        return reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(r, numChambre, cin);
+    }
 
-         public Reservation ajouterReservationEtAssignerAChambreEtAEtudiant(@RequestBody Reservation r,@PathVariable("numChambre") Long numChambre,@PathVariable("cin") long cin) {
-             Reservation reservation= reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(r,numChambre,cin);
-             return reservation;
-         }
-    // http://localhost:8089/foyer/reservation/getReservationParAnneeUniversitaire/2021-01-01/2021-12-31
     @GetMapping("/getReservationParAnneeUniversitaire/{dateDebut}/{dateFin}")
-
-    public List<Reservation> getReservationParAnneeUniversitaire(@PathVariable("dateDebut") LocalDate dateDebut,@PathVariable("dateFin") LocalDate dateFin) {
-        return reservationService.getReservationParAnneeUniversitaire(dateDebut,dateFin);
+    public List<Reservation> getReservationParAnneeUniversitaire(
+            @PathVariable("dateDebut") LocalDate dateDebut,
+            @PathVariable("dateFin") LocalDate dateFin
+    ) {
+        return reservationService.getReservationParAnneeUniversitaire(dateDebut, dateFin);
     }
 }
