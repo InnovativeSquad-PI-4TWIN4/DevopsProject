@@ -7,19 +7,20 @@ import tn.esprit.foyer.entities.Foyer;
 import tn.esprit.foyer.entities.Universite;
 import tn.esprit.foyer.repository.FoyerRepository;
 import tn.esprit.foyer.repository.UniversiteRepository;
+
 import java.util.List;
 
 @Service
 public class UniversiteServiceImpl implements IUniversiteService {
+
+    private static final Logger log = LoggerFactory.getLogger(UniversiteServiceImpl.class); // ✅ logger static
+
     private final UniversiteRepository universiteRepository;
     private final FoyerRepository foyerRepository;
-    private final Logger log;
 
-    // 🔹 Constructeur modifié pour accepter un Logger injecté
-    public UniversiteServiceImpl(UniversiteRepository universiteRepository, FoyerRepository foyerRepository, Logger log) {
+    public UniversiteServiceImpl(UniversiteRepository universiteRepository, FoyerRepository foyerRepository) {
         this.universiteRepository = universiteRepository;
         this.foyerRepository = foyerRepository;
-        this.log = log;  // Utilisation du Logger injecté
     }
 
     @Override
