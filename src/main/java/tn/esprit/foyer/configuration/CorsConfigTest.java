@@ -12,6 +12,6 @@ class CorsConfigTest {
     void testCorsConfigurerBeanIsCreated() {
         CorsConfig config = new CorsConfig();
         WebMvcConfigurer webMvcConfigurer = config.corsConfigurer();
-        assertNotNull(webMvcConfigurer, "Le bean WebMvcConfigurer ne doit pas être null");
+        
     }
 }

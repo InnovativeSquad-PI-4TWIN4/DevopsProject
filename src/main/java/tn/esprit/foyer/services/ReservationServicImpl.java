@@ -140,14 +140,14 @@ public class ReservationServicImpl implements IReservationService {
                     }
                     if(chambre.getTypeC().equals(TypeChambre.SIMPLE))
                     {
-                     log.info("nb places restantes en pour la chambre ");
+                     log.info("lblayess lfer8a ");
                      ;
                     }
                     else  if(chambre.getTypeC().equals(TypeChambre.DOUBLE)){
                         log.info("nb places restantes en pour la chambre ");
                     }
                     else { // cas triple
-                        log.info("nb places restantes en pour la chambre ");
+                        log.info("nhe rest are ");
                     }
 
 

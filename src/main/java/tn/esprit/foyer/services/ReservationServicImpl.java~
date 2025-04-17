@@ -126,7 +126,6 @@ public class ReservationServicImpl implements IReservationService {
         List<Chambre> chambresDisponibles = chambreRepository.findAll();
         chambresDisponibles.forEach(
                 chambre -> {
-         /
                   AtomicReference<Integer> nbChambresOccupes = new AtomicReference<>(0);
 
                     if(chambre.getReservations()!=null)
@@ -141,14 +140,14 @@ public class ReservationServicImpl implements IReservationService {
                     }
                     if(chambre.getTypeC().equals(TypeChambre.SIMPLE))
                     {
-                     log.info("nb places restantes en pour la chambre ");
+                     log.info("nb places restantes en pour la chambre sont ");
                      ;
                     }
                     else  if(chambre.getTypeC().equals(TypeChambre.DOUBLE)){
                         log.info("nb places restantes en pour la chambre ");
                     }
                     else { // cas triple
-                        log.info("nb places restantes en pour la chambre ");
+                        log.info("nb places restantes enpour la chambre ");
                     }
 
 
