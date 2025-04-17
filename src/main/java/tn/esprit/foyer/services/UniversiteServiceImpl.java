@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class UniversiteServiceImpl implements IUniversiteService {
 
-    private static final Logger log = LoggerFactory.getLogger(UniversiteServiceImpl.class); // ✅ logger static
+    private static final Logger log = LoggerFactory.getLogger(UniversiteServiceImpl.class);
 
     private final UniversiteRepository universiteRepository;
     private final FoyerRepository foyerRepository;
