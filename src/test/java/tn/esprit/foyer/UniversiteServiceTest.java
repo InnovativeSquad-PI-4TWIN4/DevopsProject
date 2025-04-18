@@ -52,4 +52,22 @@ class UniversiteServiceTest {
 
         verify(foyerRepository).save(foyer);
     }
+    @Test
+    void testDesaffecterFoyerAUniversite_shouldRemoveAssociationSuccessfully() {
+        long idFoyer = 10L;
+        Universite u = new Universite();
+        u.setNomUniversite("Université Y");
+
+        Foyer foyer = new Foyer();
+        foyer.setIdFoyer(idFoyer);
+        foyer.setUniversite(u);
+
+        when(foyerRepository.findById(idFoyer)).thenReturn(Optional.of(foyer));
+
+        Long resultId = universiteService.desaffecterFoyerAUniversite(idFoyer);
+
+        assertEquals(idFoyer, resultId);
+        assertNull(foyer.getUniversite());
+        verify(foyerRepository).save(foyer);
+    }
 }
