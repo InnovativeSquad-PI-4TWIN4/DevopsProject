@@ -14,10 +14,10 @@ services:
       - SPRING_DATASOURCE_PASSWORD=""
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
 
- # frontend:
- #    image: firas090/devopsrepository-frontend:latest
- #    ports:
- #      - "4200:80"
+  frontend:
+    image: oumaimaamdouni/devopsrepository-frontend:latest
+    ports:
+       - "4200:80"
 
   mysql:
     image: mysql:8.0
