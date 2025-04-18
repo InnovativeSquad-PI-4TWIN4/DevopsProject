@@ -32,10 +32,15 @@ public class ReservationServicImpl implements IReservationService {
         return reservationRepository.findAll();
     }
 
-    @Override
+
+       @Override
     public Reservation addReservation(Reservation r) {
+        if (r.getEtudiants() == null) {
+            r.setEtudiants(new ArrayList<>()); // éviter le NullPointerException
+        }
         return reservationRepository.save(r);
     }
+
 
     @Override
     public Reservation updateReservation(Reservation r) {
