@@ -6,7 +6,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import tn.esprit.foyer.entities.Chambre;
 import tn.esprit.foyer.entities.Etudiant;
 import tn.esprit.foyer.entities.Reservation;
@@ -24,8 +23,8 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ReservationServiceImplTest {
-    private List<Reservation> reservations = new ArrayList<>();
+ class ReservationServiceImplTest {
+
     @Mock
     private EtudiantRepository etudiantRepository;
 
@@ -65,7 +64,7 @@ public class ReservationServiceImplTest {
 
 
     @Test
-    public void testAjouterReservationEtAssignerAChambreEtAEtudiant() {
+     void testAjouterReservationEtAssignerAChambreEtAEtudiant() {
         // Simuler une chambre vide : aucune réservation pour cette chambre
         when(etudiantRepository.findByCin(12345L)).thenReturn(etudiant);
         when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre);
@@ -99,7 +98,7 @@ public class ReservationServiceImplTest {
 
 
     @Test
-    public void testAjouterReservationChambrePleineWithError() {
+    void testAjouterReservationChambrePleineWithError() {
         // Préparer le scénario où la chambre est pleine avec 2 réservations existantes
         chambre.setTypeC(TypeChambre.SIMPLE); // Assurez-vous que la chambre est du type 'SIMPLE'
         chambre.setReservations(List.of(new Reservation(), new Reservation())); // Ajouter deux réservations
@@ -119,52 +118,7 @@ public class ReservationServiceImplTest {
 
 
 
-//    @Test
-//    public void testAjouterReservationChambreDoubleWithSpace() {
-//        // Scénario où la chambre est de type DOUBLE et il reste de la place pour un étudiant supplémentaire
-//        chambre.setTypeC(TypeChambre.DOUBLE);  // La chambre est de type double
-//        chambre.setReservations(new ArrayList<>());  // Aucune réservation existante, la chambre est vide
-//
-//        // Simuler un étudiant avec CIN 12345
-//        when(etudiantRepository.findByCin(12345L)).thenReturn(etudiant);
-//        // Simuler la recherche de la chambre numéro 101
-//        when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre);
-//        // Retourner 0 réservations existantes pour la chambre (chambre vide)
-//        when(reservationRepository.getReservationsCurrentYear(any(), any(), eq(101L))).thenReturn(0);
-//
-//        // Appel de la méthode à tester avec une chambre de type DOUBLE
-//        Reservation result = reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 12345L);
-//
-//        // Vérification que la réservation a bien été ajoutée
-//        assertNotNull(result);  // La réservation ne doit pas être nulle car il reste de la place
-//        assertTrue(result.getEtudiants().contains(etudiant));  // Vérifier si l'étudiant a été bien assigné à la réservation
-//        verify(reservationRepository, times(1)).save(any(Reservation.class));  // Vérifier que save a bien été appelé une fois
-//        verify(chambreRepository, times(1)).save(chambre);  // Vérifier que save a été appelé pour la chambre
-//
-//        // Vérification de l'état de la chambre après la réservation (si nécessaire)
-//        assertEquals(1, chambre.getReservations().size());  // Vérifier qu'une réservation a bien été ajoutée à la chambre
-//    }
 
-
-   // @Test
-//    public void testAjouterReservationChambreTripleWithSpace() {
-//        // Scénario où la chambre est de type TRIPLE et il reste de la place pour un étudiant supplémentaire
-//        chambre.setTypeC(TypeChambre.TRIPLE);  // La chambre est de type triple
-//        chambre.setReservations(List.of(new Reservation(), new Reservation()));  // Ajouter deux réservations existantes
-//
-//        when(etudiantRepository.findByCin(12345L)).thenReturn(etudiant);  // Simuler un étudiant avec CIN 12345
-//        when(chambreRepository.findByNumeroChambre(101L)).thenReturn(chambre);  // Simuler la recherche de la chambre numéro 101
-//        when(reservationRepository.getReservationsCurrentYear(any(), any(), eq(101L))).thenReturn(2);  // Retourner 2 réservations existantes pour l'année en cours
-//
-//        // Appel de la méthode à tester avec une chambre de type TRIPLE
-//        Reservation result = reservationService.ajouterReservationEtAssignerAChambreEtAEtudiant(reservation, 101L, 12345L);
-//
-//        // Vérification que la réservation a bien été ajoutée pour une chambre TRIPLE
-//        assertNotNull(result);  // La réservation ne doit pas être nulle car la chambre TRIPLE peut encore accepter un étudiant supplémentaire
-//        assertTrue(result.getEtudiants().contains(etudiant));  // Vérifier que l'étudiant a été assigné à la réservation
-//        verify(reservationRepository, times(1)).save(any(Reservation.class));  // Vérifier que save a bien été appelé une fois
-//        verify(chambreRepository, times(1)).save(chambre);  // Vérifier que save a été appelé pour la chambre
-//    }
 
 
 }
