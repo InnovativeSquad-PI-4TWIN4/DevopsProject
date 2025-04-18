@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
     @BeforeEach
 
-     void setUp() {
+    public void setUp() {
         etudiant = new Etudiant();
         etudiant.setCin(12345L);
         etudiant.setNomEt("John");
